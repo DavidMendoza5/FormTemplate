@@ -1,8 +1,9 @@
 <template>
   <div class="main-container">
     <section class="form-container">
-      <figure>
+      <figure class="img-section">
         <img class="profile-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR684OS5k3Nuzx3bWg5e7FjQHxwNZ8WbtnRYw&usqp=CAU" alt="Person">
+        <b-icon class="person-icon" icon="person-circle" style="width: 30px; height: 30px;"></b-icon>
       </figure>
       <div class="form-section">
         <form class="form">
@@ -70,6 +71,10 @@ export default {
     width: 500px;
   }
 
+  .img-section {
+    position: relative;
+  }
+
   .profile-img {
     border-radius: 35%;
     width: 90px;
@@ -77,6 +82,14 @@ export default {
     padding: 2px;
     background-color: white;
     border: 3px #ff7eef solid;
+  }
+
+  .person-icon {
+    border: 2px #ff7eef solid;
+    border-radius: 50%;
+    position: absolute;
+    top: 28%;
+    left: 80%;
   }
 
   .form-section {

@@ -7,7 +7,7 @@
         <p>En menos de 5 minutos</p>
       </div>
     </div>
-    <b-icon icon="clipboard" style="width: 120px; height: 120px;"></b-icon>
+    <b-icon class="clipboard-icon" icon="clipboard" style="width: 120px; height: 120px;"></b-icon>
   </div>
 </template>
 
@@ -31,6 +31,10 @@ export default {
     background-color: #ff7eef;
     padding: 40px;
 
+  }
+
+  .clipboard-icon {
+    color: white;
   }
 
   .title {
