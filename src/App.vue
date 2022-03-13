@@ -77,21 +77,38 @@ export default {
       if(!name_elements && !date_elements && !contact_elements) {
         this.form_finished = true;
         this.createUser();
+      } else {
+        alert('Hay campos vacíos');
       }
     },
     async createUser() {
-      const birthdate = this.date_data.day + ' ' + this.date_data.month + ' ' + this.date_data.year;
-      const user = {
-        name: this.name_data.name,
-        second_name: this.name_data.second_name,
-        lastname: this.name_data.last_name,
-        second_lastname: this.name_data.second_last_name,
-        birthdate,
-        email: this.contact_data.email,
-        phone_number: this.contact_data.phone,
-      };
+      try {
+        const birthdate = this.date_data.day + ' ' + this.date_data.month + ' ' + this.date_data.year;
+        const user = {
+          name: this.name_data.name,
+          second_name: this.name_data.second_name,
+          lastname: this.name_data.last_name,
+          second_lastname: this.name_data.second_last_name,
+          birthdate,
+          email: this.contact_data.email,
+          phone_number: this.contact_data.phone,
+        };
 
-      await UserService.createUser(user);
+        sessionStorage.setItem('user', JSON.stringify(user));
+
+        await UserService.createUser(user);
+      } catch (err) {
+        const error_response = err.response.data;
+        const error_array = error_response.split('\n');
+        let html_error_message;
+        error_array.map((element) => {
+          if(element.includes('<pre>')) {
+            html_error_message = element;
+          }
+        });
+        const error_message = html_error_message.split('<pre>')
+        alert(error_message[1]);
+      }
     },
   },
 }
