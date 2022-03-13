@@ -23,10 +23,11 @@
 </template>
 
 <script>
-import Title from './components/Title.vue'
-import NameForm from './components/NameForm.vue'
-import DateForm from './components/DateForm.vue'
-import ContactForm from './components/ContactForm.vue'
+import Title from './components/Title.vue';
+import NameForm from './components/NameForm.vue';
+import DateForm from './components/DateForm.vue';
+import ContactForm from './components/ContactForm.vue';
+import UserService from './services/user.service';
 
 export default {
   name: 'App',
@@ -75,7 +76,22 @@ export default {
 
       if(!name_elements && !date_elements && !contact_elements) {
         this.form_finished = true;
+        this.createUser();
       }
+    },
+    async createUser() {
+      const birthdate = this.date_data.day + ' ' + this.date_data.month + ' ' + this.date_data.year;
+      const user = {
+        name: this.name_data.name,
+        second_name: this.name_data.second_name,
+        lastname: this.name_data.last_name,
+        second_lastname: this.name_data.second_last_name,
+        birthdate,
+        email: this.contact_data.email,
+        phone_number: this.contact_data.phone,
+      };
+
+      await UserService.createUser(user);
     },
   },
 }
