@@ -17,6 +17,7 @@
           <div class="form-group">
             <input type="text" class="form-control" placeholder="Año " v-model="data_info.year">
           </div>
+          <label for="input-live">Ejemplo: 05 Enero 1998</label>
         </form>
         <section class="date-section" v-if="form_finished">
           {{ data_info.day + ' ' + data_info.month + ' ' + data_info.year }} 
@@ -33,7 +34,7 @@ export default {
       day: '',
       month: '',
       year: '',
-    }
+    },
   },
   data() {
     return {
@@ -41,7 +42,7 @@ export default {
     }
   },
   updated() {
-    if(this.data_info.day && this.data_info.month && this.data_info.year) {
+    if(this.data_info.day.length  === 2 && this.data_info.month && this.data_info.year.length === 4) {
         this.form_finished = true;
     } else {
       this.form_finished = false;
