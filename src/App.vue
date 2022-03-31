@@ -9,13 +9,13 @@
       <b-button @click="showUserData" class="send_btn btn btn-primary btn-lg" variant="danger">Iniciar</b-button>
       <section class="answers-section" v-if="form_finished">
           <div>
-           Fecha de nacimiento: {{ date_data.day + ' ' + date_data.month + ' ' + date_data.year }}
+           Fecha de nacimiento: {{ user.birthdate }}
            <br>
-           Correo electrónico: {{ contact_data.email }}
+           Correo electrónico: {{ user.email }}
            <br>
-           Teléfono celular: {{ contact_data.phone }}
+           Teléfono celular: {{ user.phone }}
            <br>
-           Nombre: {{ name_data.name + ' ' + name_data.second_name + ' ' + name_data.last_name + ' ' + name_data.second_last_name }}
+           Nombre: {{ user.name + ' ' + user.second_name + ' ' + user.lastname + ' ' + user.second_lastname }}
           </div>
       </section>
     </div>
@@ -56,6 +56,15 @@ export default {
         phone: '',
       },
       form_finished: false,
+      user: {
+          name: '',
+          second_name: '',
+          lastname: '',
+          second_lastname: '',
+          birthdate: '',
+          email: '',
+          phone_number: '',
+      },
     }
   },
   methods: {
@@ -69,13 +78,23 @@ export default {
       });
       return empty_element;
     },
+    resetInformation() {
+          this.name_data.name = '';
+          this.name_data.second_name = '';
+          this.name_data.last_name = '';
+          this.name_data.second_last_name = '';
+          this.date_data.day = '';
+          this.date_data.month = '';
+          this.date_data.year = '';
+          this.contact_data.email = '';
+          this.contact_data.phone = '';
+    },
     showUserData() {
       const name_elements = this.checkEmptyValues(this.name_data)
       const date_elements = this.checkEmptyValues(this.date_data)
       const contact_elements = this.checkEmptyValues(this.contact_data)
 
       if(!name_elements && !date_elements && !contact_elements) {
-        this.form_finished = true;
         this.createUser();
       } else {
         alert('Hay campos vacíos');
@@ -84,30 +103,24 @@ export default {
     async createUser() {
       try {
         const birthdate = this.date_data.day + ' ' + this.date_data.month + ' ' + this.date_data.year;
-        const user = {
-          name: this.name_data.name,
-          second_name: this.name_data.second_name,
-          lastname: this.name_data.last_name,
-          second_lastname: this.name_data.second_last_name,
-          birthdate,
-          email: this.contact_data.email,
-          phone_number: this.contact_data.phone,
-        };
 
-        sessionStorage.setItem('user', JSON.stringify(user));
+        this.user.name = this.name_data.name;
+        this.user.second_name = this.name_data.second_name,
+        this.user.lastname = this.name_data.last_name,
+        this.user.second_lastname = this.name_data.second_last_name,
+        this.user.birthdate = birthdate,
+        this.user.email = this.contact_data.email,
+        this.user.phone_number = this.contact_data.phone,
 
-        await UserService.createUser(user);
+        sessionStorage.setItem('user', JSON.stringify(this.user));
+
+        const new_user = await UserService.createUser(this.user);
+        if(new_user) {
+          this.form_finished = true;
+          this.resetInformation();
+        }
       } catch (err) {
-        const error_response = err.response.data;
-        const error_array = error_response.split('\n');
-        let html_error_message;
-        error_array.map((element) => {
-          if(element.includes('<pre>')) {
-            html_error_message = element;
-          }
-        });
-        const error_message = html_error_message.split('<pre>')
-        alert(error_message[1]);
+        alert(err.response.data);
       }
     },
   },
